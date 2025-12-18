@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Seat | RFID Attendance & Assign</title>
+  <meta name="description" content="Smart Seat is a modern classroom tool for RFID attendance, seat assignment, and in/out tracking—built for speed and clarity." />
+  <meta name="theme-color" content="#0b5d7a" />
+
+  <!-- Optional: Google Fonts (safe to remove if you prefer system fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg0:#07121d;
+      --bg1:#0b1422;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --border: rgba(148,163,184,.18);
+      --text: #e5e7eb;
+      --muted:#a3b1c6;
+
+      --blue:#0b5d7a;
+      --blue2:#0f76a8;
+
+      --green:#33a312;
+      --green2:#58c31b;
+
+      --shadow: 0 12px 35px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(15,118,168,.28), transparent 60%),
+        radial-gradient(900px 700px at 80% 35%, rgba(88,195,27,.18), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:1100px; margin:0 auto; padding:28px 18px 64px; }
+
+    /* Top bar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+      padding:10px 0 18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .brand .mini{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, rgba(15,118,168,.45), rgba(88,195,27,.35));
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    .brand .title{
+      display:flex; flex-direction:column; line-height:1.1;
+    }
+    .brand .title strong{
+      font-family: Oswald, Poppins, sans-serif;
+      letter-spacing:.4px;
+      font-size:18px;
+    }
+    .brand .title span{
+      font-size:12px; color:var(--muted);
+    }
+
+    .nav{
+      display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end;
+      font-size:13px; color: var(--muted);
+    }
+    .nav a{ padding:8px 10px; border-radius:12px; }
+    .nav a:hover{ background: rgba(255,255,255,.06); color: var(--text); }
+
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px){
+      .hero{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .heroLeft{ padding:22px 22px 18px; }
+    .logoBox{
+      background: rgba(255,255,255,.95);
+      border-radius: 16px;
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(15,23,42,.12);
+      box-shadow: 0 12px 30px rgba(0,0,0,.20);
+    }
+    .logoBox img{
+      width:min(520px, 100%);
+      height:auto;
+      display:block;
+    }
+
+    .headline{
+      margin:18px 0 10px;
+      font-family: Oswald, Poppins, sans-serif;
+      letter-spacing:.2px;
+      font-size: 40px;
+      line-height:1.05;
+    }
+    @media (max-width: 520px){
+      .headline{ font-size:34px; }
+    }
+    .subhead{
+      margin:0 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height:1.6;
+      max-width: 58ch;
+    }
+
+    .ctaRow{
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin: 12px 0 8px;
+    }
+    .btn{
+      border:1px solid var(--border);
+      padding:12px 14px;
+      border-radius: 14px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:600;
+      letter-spacing:.2px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.20);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, filter .08s ease;
+    }
+    .btn:hover{ filter: brightness(1.05); }
+    .btn:active{ transform: translateY(1px); }
+
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--blue2), var(--blue));
+      border-color: rgba(125,211,252,.25);
+    }
+    .btnSecondary{
+      background: rgba(255,255,255,.06);
+    }
+    .pillRow{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size:12px;
+    }
+    .pill{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      padding:7px 10px;
+      border-radius: 999px;
+    }
+
+    /* Right panel */
+    .heroRight{ padding:18px; display:flex; flex-direction:column; gap:12px; }
+    .kicker{
+      font-size:12px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .14em;
+    }
+    .feature{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding:14px;
+    }
+    .feature h3{
+      margin:0 0 6px;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .feature p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    /* Sections */
+    .section{
+      margin-top: 18px;
+      padding: 18px;
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-family: Oswald, Poppins, sans-serif;
+      letter-spacing:.2px;
+      font-size: 22px;
+    }
+    .section p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.7;
+      font-size: 14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
+
+    .tile{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding:14px;
+    }
+    .tile .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:12px;
+      color: var(--text);
+      margin-bottom: 8px;
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(125,211,252,.20);
+      background: rgba(15,118,168,.14);
+    }
+    .tile h3{ margin:0 0 6px; font-size:14px; }
+    .tile p{ margin:0; color:var(--muted); font-size:13px; line-height:1.5; }
+
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 900px){ .twoCol{ grid-template-columns:1fr; } }
+
+    /* Footer */
+    footer{
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      padding: 14px 4px 0;
+    }
+
+    /* Tiny icons */
+    .dot{
+      width:10px; height:10px; border-radius:999px; display:inline-block;
+      background: linear-gradient(135deg, var(--green2), var(--green));
+      box-shadow: 0 0 0 4px rgba(88,195,27,.12);
+    }
+    .arrow{
+      width:18px; height:18px; display:inline-block;
+      border-radius: 8px;
+      background: rgba(255,255,255,.10);
+      border:1px solid var(--border);
+      position:relative;
+    }
+    .arrow:before{
+      content:"";
+      position:absolute;
+      width:7px; height:7px;
+      border-right:2px solid rgba(229,231,235,.9);
+      border-top:2px solid rgba(229,231,235,.9);
+      transform: rotate(45deg);
+      right:5px; top:5px;
+    }
+    .note{
+      font-size:12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    code{
+      background: rgba(0,0,0,.30);
+      border:1px solid rgba(148,163,184,.22);
+      padding:2px 7px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mini" aria-hidden="true"></div>
+        <div class="title">
+          <strong>Smart Seat</strong>
+          <span>RFID Attendance & Assign</span>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a href="#features">Features</a>
+        <a href="#who">Who it’s for</a>
+        <a href="#security">Security</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="card heroLeft">
+        <div class="logoBox">
+          <!-- Put your logo file beside index.html named smartseat-logo.png -->
+          <img src="smartseat-logo.png" alt="Smart Seat logo" />
+        </div>
+
+        <h1 class="headline">A modern, real-time classroom management tool.</h1>
+        <p class="subhead">
+          Smart Seat uses RFID/NFC tap-in, live seat assignment, and in/out tracking to keep classrooms organized with
+          fast, clear, and student-friendly visuals—designed by a teacher for everyday use.
+        </p>
+
+        <div class="ctaRow">
+          <!-- IMPORTANT: Replace the # with your Apps Script Web App URL -->
+          <a class="btn btnPrimary" href="#" id="launchBtn">
+            <span class="dot" aria-hidden="true"></span>
+            Launch Smart Seat
+          </a>
+
+          <!-- Optional second button -->
+          <a class="btn btnSecondary" href="#features">
+            <span class="arrow" aria-hidden="true"></span>
+            Learn what it does
+          </a>
+        </div>
+
+        <div class="pillRow">
+          <span class="pill">Built for schools</span>
+          <span class="pill">Fast to use</span>
+          <span class="pill">Big-screen friendly</span>
+          <span class="pill">Google Sheets backend</span>
+        </div>
+
+        <div class="note">
+          Tip: When you’re ready, point your domain here and your Smart Seat web app stays protected behind your PIN.
+        </div>
+      </div>
+
+      <aside class="card heroRight">
+        <div class="kicker">At a glance</div>
+
+        <div class="feature">
+          <h3>RFID Attendance</h3>
+          <p>Students tap in quickly. Attendance is timestamped automatically—no roll call needed.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Seat Assignment</h3>
+          <p>Assign or randomize seating instantly, with support for exceptions and accommodations.</p>
+        </div>
+
+        <div class="feature">
+          <h3>In/Out Tracking</h3>
+          <p>Live classroom occupancy and clear “OUT” status—built for visibility across the room.</p>
+        </div>
+
+        <div class="feature">
+          <h3>Simple Backend</h3>
+          <p>Powered by school-owned Google Sheets for easy updates, audit history, and exports.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="features" class="card section">
+      <h2>What Smart Seat does</h2>
+      <p>
+        Smart Seat is designed to reduce classroom friction—fewer interruptions, fewer manual steps, and more clarity
+        for both students and staff.
+      </p>
+
+      <div class="grid">
+        <div class="tile">
+          <div class="tag">RFID / NFC</div>
+          <h3>Tap-in Attendance</h3>
+          <p>Quick scanning and automatic timestamps. Great for busy classes and early-bird programs.</p>
+        </div>
+
+        <div class="tile">
+          <div class="tag" style="border-color: rgba(88,195,27,.25); background: rgba(88,195,27,.12);">Seating</div>
+          <h3>Smart Seat Assign</h3>
+          <p>Randomize or assign seats in seconds. Supports “keep apart” rules and consistent layouts.</p>
+        </div>
+
+        <div class="tile">
+          <div class="tag">Live Status</div>
+          <h3>In / Out Visibility</h3>
+          <p>Clear indicators show who is out, who returned, and current occupancy limits at a glance.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="who" class="card section">
+      <h2>Who it’s for</h2>
+      <p>Smart Seat is built for real classroom routines—daily attendance, labs, exams, and sub days.</p>
+
+      <div class="twoCol">
+        <div class="tile">
+          <h3>Teachers</h3>
+          <p>Run attendance and seating without slowing down instruction.</p>
+        </div>
+        <div class="tile">
+          <h3>Exam supervision</h3>
+          <p>Quick seat resets, clear layouts, and rules that reduce issues.</p>
+        </div>
+        <div class="tile">
+          <h3>Substitutes</h3>
+          <p>Simple “launch and go” workflow with limited-access options.</p>
+        </div>
+        <div class="tile">
+          <h3>Admins & support staff</h3>
+          <p>Clear accountability with timestamped logs and exportable records.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="security" class="card section">
+      <h2>Security & access</h2>
+      <p>
+        Smart Seat can remain protected behind your existing web app PIN/permissions while this landing page stays public.
+        Data lives in your school-owned Google Sheets—keeping things familiar and auditable.
+      </p>
+
+      <div class="grid">
+        <div class="tile">
+          <h3>PIN-protected tools</h3>
+          <p>Keep staff-only functions locked while still having a clean public front door.</p>
+        </div>
+        <div class="tile">
+          <h3>Teacher-controlled workflow</h3>
+          <p>No student accounts required. You decide what gets shown or allowed.</p>
+        </div>
+        <div class="tile">
+          <h3>Google Sheets backend</h3>
+          <p>Easy edits, history tracking, and quick exports when you need them.</p>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:12px;">
+        When you set up your domain, you’ll typically point <code>smartseat.yourdomain.com</code> to this page, and the
+        “Launch Smart Seat” button opens your Apps Script web app.
+      </p>
+    </section>
+
+    <section id="contact" class="card section">
+      <h2>Contact</h2>
+      <p>
+        Want to report an issue, request a feature, or add another school tool to this hub?
+        Add your preferred contact method here (email, form, or school-safe contact page).
+      </p>
+      <p class="note" style="margin-top:10px;">
+        Quick edit: Replace this section with your email, or link a Google Form for feedback.
+      </p>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Smart Seat • Built for schools</div>
+      <div>Landing page hosted on GitHub Pages • Secured app hosted on Google Apps Script</div>
+    </footer>
+  </div>
+
+  <script>
+    // Update year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // TODO: Replace with your Apps Script Web App URL
+    // Example: https://script.google.com/macros/s/AKfycbxxxxxxx/exec
+    const SMARTSEAT_URL = "https://script.google.com/macros/s/AKfycbz5yGee1rhN7jQC1ALJQx3ch_84aHpKxvfyHZXNs4QP0aTNwRfvp288pACj4X5Iih79/exec";
+
+    const launchBtn = document.getElementById("launchBtn");
+
+launchBtn.setAttribute("href", SMARTSEAT_URL);
+launchBtn.setAttribute("target", "_blank");
+launchBtn.setAttribute("rel", "noopener");
+
+launchBtn.addEventListener("click", (e) => {
+  if (!SMARTSEAT_URL || SMARTSEAT_URL.trim() === "#" || !SMARTSEAT_URL.startsWith("http")) {
+    e.preventDefault();
+    alert("SMARTSEAT_URL is missing or invalid. Paste your Apps Script Web App URL in SMARTSEAT_URL.");
+  }
+});
+  </script>
+</body>
+</html>
