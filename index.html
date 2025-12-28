@@ -74,7 +74,7 @@
       min-width: 220px;
     }
     .brand img{
-      height:58px; /* header size (still strong) */
+      height:58px; /* prominent header mark */
       width:auto;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -295,7 +295,7 @@
       display:flex;
       flex-direction:column;
       gap:10px;
-      min-height: 168px;
+      min-height: 220px;
     }
     .toolHead{
       display:flex;
@@ -333,7 +333,7 @@
     }
     .toolActions a{ flex: 1 1 auto; text-align:center; }
 
-    /* Smart Seat logo inside tools */
+    /* Tool logos (all tool cards) */
     .toolLogoBox{
       margin-top:2px;
       background: rgba(255,255,255,.94);
@@ -344,11 +344,14 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      min-height: 86px; /* keeps cards aligned even if logos vary */
     }
     .toolLogoBox img{
       width: min(220px, 100%);
       height:auto;
       display:block;
+      max-height: 64px; /* keeps tall logos tidy */
+      object-fit: contain;
     }
 
     .callout{
@@ -452,7 +455,7 @@
         <div class="divider"></div>
 
         <p class="sectionSub" style="margin:0;">
-          Note: each tool opens in a new tab for the best compatibility (Option A).
+          Note: each tool opens in a new tab for the best compatibility.
         </p>
       </div>
     </div>
@@ -498,7 +501,7 @@
             <div class="badge featured">Featured</div>
           </div>
 
-          <div class="toolLogoBox" aria-hidden="true">
+          <div class="toolLogoBox">
             <img src="smartseat-logo.png" alt="Smart Seat logo">
           </div>
 
@@ -522,6 +525,10 @@
             <div class="badge">New</div>
           </div>
 
+          <div class="toolLogoBox">
+            <img src="scriptbuilder-logo.png" alt="SABTV Script Builder logo">
+          </div>
+
           <div class="toolActions">
             <a class="btn primary"
                href="https://script.google.com/a/macros/eics.ab.ca/s/AKfycbyPoFTs9K3XYnPHnv4y65biHlQytCR-jfLa721R0irhNZHqWxnFZ3L3LGY7gZUisvxp/exec"
@@ -542,6 +549,10 @@
             <div class="badge">Popular</div>
           </div>
 
+          <div class="toolLogoBox">
+            <img src="commentbuilder-logo.png" alt="Report Card Comment Builder logo">
+          </div>
+
           <div class="toolActions">
             <a class="btn primary"
                href="https://script.google.com/macros/s/AKfycbwAj4nY__TUSTHp8-Uw5cf5GA8VUdoxVt02DEGF4CdMnFRK-S3_osAIEiL56yYaQ8Co/exec"
@@ -551,11 +562,12 @@
             <a class="btn ghost" href="#contact">Request access</a>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- SMART SEAT DETAILS (keeps your existing section, just slightly reframed) -->
+  <!-- SMART SEAT DETAILS -->
   <section id="smartseat" class="section card">
     <div class="pad">
       <h2 class="sectionTitle">Smart Seat</h2>
