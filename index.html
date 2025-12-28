@@ -295,7 +295,7 @@
       display:flex;
       flex-direction:column;
       gap:10px;
-      min-height: 220px;
+      min-height: 240px;
     }
     .toolHead{
       display:flex;
@@ -309,16 +309,6 @@
       display:block;
       line-height:1.25;
     }
-    .badge{
-      font-size:11px;
-      color: rgba(255,255,255,.92);
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,.16);
-      background: rgba(15,118,168,.18);
-      white-space:nowrap;
-    }
-    .badge.featured{ background: rgba(88,195,27,.16); }
     .tool span{
       color: var(--muted);
       font-size:13px;
@@ -333,26 +323,46 @@
     }
     .toolActions a{ flex: 1 1 auto; text-align:center; }
 
-    /* Tool logos (all tool cards) */
+    /* Tool logos – prominent & balanced */
     .toolLogoBox{
-      margin-top:2px;
-      background: rgba(255,255,255,.94);
-      border-radius: 14px;
-      padding:10px 12px;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      margin-top:6px;
+      background:#ffffff; /* match badge */
+      border-radius: 16px;
+      padding:18px;
+      border: 1px solid rgba(15,23,42,.12);
+      box-shadow: 0 12px 28px rgba(0,0,0,.22);
+
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height: 86px; /* keeps cards aligned even if logos vary */
+
+      height: 110px; /* balanced visual weight */
     }
     .toolLogoBox img{
-      width: min(220px, 100%);
+      max-height: 70px;   /* bigger */
+      max-width: 90%;
       height:auto;
-      display:block;
-      max-height: 64px; /* keeps tall logos tidy */
+      width:auto;
       object-fit: contain;
     }
+
+    /* Tool badges (match logo cards) */
+    .badge{
+      font-size:11px;
+      font-weight:600;
+      padding:6px 12px;
+      border-radius:999px;
+
+      background:#ffffff; /* match logo card */
+      color:#0b5d7a;      /* brand blue */
+      border: 1px solid rgba(15,23,42,.18);
+
+      white-space:nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,.15);
+    }
+    .badge.featured{ color:#2e7d32; }
+    .badge.new{ color:#0f76a8; }
+    .badge.popular{ color:#8e6c00; }
 
     .callout{
       border-radius: 16px;
@@ -522,7 +532,7 @@
               <strong>SABTV Script Builder</strong>
               <span>Generate a daily announcements script with weather + announcements + fun fact.</span>
             </div>
-            <div class="badge">New</div>
+            <div class="badge new">New</div>
           </div>
 
           <div class="toolLogoBox">
@@ -546,7 +556,7 @@
               <strong>Report Card Comment Builder</strong>
               <span>Build consistent, high-quality comments quickly with an organized workflow.</span>
             </div>
-            <div class="badge">Popular</div>
+            <div class="badge popular">Popular</div>
           </div>
 
           <div class="toolLogoBox">
