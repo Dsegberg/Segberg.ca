@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Smart Seat | Segberg.ca</title>
+  <title>Segberg.ca | Educator-built tools</title>
 
-  <meta name="description" content="Smart Seat is an educator-built classroom tool for RFID attendance, seat assignment, and in/out tracking — designed for clarity, speed, and daily use." />
+  <meta name="description" content="Segberg.ca is an educator-built hub of practical classroom tools: Smart Seat (RFID attendance + seating), a report card comment builder, and a script builder for announcements." />
   <meta name="theme-color" content="#0b5d7a" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -71,11 +71,10 @@
       display:flex;
       align-items:center;
       gap:14px;
-      min-width: 240px;
+      min-width: 220px;
     }
-    /* Larger Segberg logo */
     .brand img{
-      height:62px; /* <-- BIGGER */
+      height:58px; /* header size (still strong) */
       width:auto;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -125,58 +124,19 @@
     }
     .pad{ padding:22px; }
 
-    /* Hero */
-    .hero{
-      margin-top: 22px;
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:16px;
-      align-items:stretch;
-    }
-    @media (max-width: 980px){ .hero{ grid-template-columns:1fr; } }
-
-    .heroLeft{ position:relative; }
-    .heroLeft:before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      border-radius: var(--radius);
-      pointer-events:none;
-      background:
-        radial-gradient(600px 220px at 40% 10%, rgba(15,118,168,.24), transparent 60%),
-        radial-gradient(520px 260px at 80% 55%, rgba(88,195,27,.14), transparent 60%);
-      opacity:.9;
-      mask: linear-gradient(#000,#000);
-    }
-
-    .productLogoBox{
-      background: rgba(255,255,255,.96);
-      border-radius: 16px;
-      padding:18px;
-      display:flex;
-      justify-content:center;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: 0 12px 34px rgba(0,0,0,.20);
-    }
-    .productLogoBox img{
-      width:min(520px,100%);
-      height:auto;
-      display:block;
-    }
-
     h1{
       font-family: Oswald, Poppins, sans-serif;
       letter-spacing:.2px;
-      font-size: 40px;
+      font-size: 42px;
       line-height:1.04;
-      margin:16px 0 10px;
+      margin:14px 0 10px;
     }
     .lead{
       margin:0;
       color: var(--muted);
       font-size: 15px;
       line-height:1.65;
-      max-width: 60ch;
+      max-width: 68ch;
     }
 
     .ctaRow{
@@ -205,9 +165,7 @@
       background: linear-gradient(135deg, var(--blue), var(--blue2));
       border-color: rgba(125,211,252,.22);
     }
-    .ghost{
-      background: rgba(255,255,255,.06);
-    }
+    .ghost{ background: rgba(255,255,255,.06); }
 
     .pillRow{
       display:flex;
@@ -224,11 +182,69 @@
       background: rgba(255,255,255,.04);
     }
 
-    /* Right column - clean list */
-    .stack{
-      display:grid;
-      gap:12px;
+    .divider{
+      height:1px;
+      background: rgba(148,163,184,.14);
+      margin: 14px 0;
     }
+
+    /* Hero (Segberg hub first) */
+    .hero{
+      margin-top: 22px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){ .hero{ grid-template-columns:1fr; } }
+
+    .heroLeft{ position:relative; }
+    .heroLeft:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius: var(--radius);
+      pointer-events:none;
+      background:
+        radial-gradient(640px 260px at 40% 10%, rgba(15,118,168,.24), transparent 60%),
+        radial-gradient(520px 280px at 80% 55%, rgba(88,195,27,.14), transparent 60%);
+      opacity:.9;
+      mask: linear-gradient(#000,#000);
+    }
+
+    .hubMark{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(148,163,184,.14);
+    }
+    .hubMark img{
+      height:86px; /* BIG hub logo */
+      width:auto;
+      display:block;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.40));
+    }
+    .hubMarkText strong{
+      font-family: Oswald, Poppins, sans-serif;
+      font-size:26px;
+      letter-spacing:.3px;
+      display:block;
+      line-height:1.05;
+    }
+    .hubMarkText span{
+      display:block;
+      color: var(--muted);
+      margin-top:6px;
+      font-size:13px;
+      line-height:1.45;
+      max-width: 42ch;
+    }
+
+    /* Right column list */
+    .stack{ display:grid; gap:12px; }
     .miniCard{
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(148,163,184,.16);
@@ -249,9 +265,7 @@
     }
 
     /* Sections */
-    .section{
-      margin-top: 16px;
-    }
+    .section{ margin-top: 16px; }
     .sectionTitle{
       font-family: Oswald, Poppins, sans-serif;
       letter-spacing:.2px;
@@ -271,6 +285,71 @@
       gap:12px;
     }
     @media (max-width: 980px){ .grid3{ grid-template-columns:1fr; } }
+
+    /* Tool cards */
+    .tool{
+      border-radius: 18px;
+      padding:16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(148,163,184,.16);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height: 168px;
+    }
+    .toolHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .tool strong{
+      font-size:15px;
+      letter-spacing:.15px;
+      display:block;
+      line-height:1.25;
+    }
+    .badge{
+      font-size:11px;
+      color: rgba(255,255,255,.92);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.16);
+      background: rgba(15,118,168,.18);
+      white-space:nowrap;
+    }
+    .badge.featured{ background: rgba(88,195,27,.16); }
+    .tool span{
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      display:block;
+    }
+    .toolActions{
+      margin-top:auto;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .toolActions a{ flex: 1 1 auto; text-align:center; }
+
+    /* Smart Seat logo inside tools */
+    .toolLogoBox{
+      margin-top:2px;
+      background: rgba(255,255,255,.94);
+      border-radius: 14px;
+      padding:10px 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .toolLogoBox img{
+      width: min(220px, 100%);
+      height:auto;
+      display:block;
+    }
 
     .callout{
       border-radius: 16px;
@@ -306,13 +385,6 @@
       padding: 10px 4px 0;
     }
 
-    /* subtle divider */
-    .divider{
-      height:1px;
-      background: rgba(148,163,184,.14);
-      margin: 14px 0;
-    }
-
     code{
       background: rgba(0,0,0,.25);
       border:1px solid rgba(148,163,184,.20);
@@ -325,15 +397,16 @@
 <body>
 <header>
   <div class="headerInner">
-    <div class="brand">
+    <a class="brand" href="#top" aria-label="Segberg.ca home">
       <img src="segberg-logo.png" alt="Segberg.ca logo">
       <div class="brandText">
         <strong>Segberg.ca</strong>
         <span>Educator-built classroom tools</span>
       </div>
-    </div>
+    </a>
 
     <nav>
+      <a href="#tools">Tools</a>
       <a href="#smartseat">Smart Seat</a>
       <a href="#who">Who it’s for</a>
       <a href="#how">How it works</a>
@@ -342,42 +415,44 @@
   </div>
 </header>
 
-<div class="wrap">
+<div id="top" class="wrap">
 
-  <!-- HERO -->
-  <section id="smartseat" class="hero">
+  <!-- HERO (Hub identity first) -->
+  <section class="hero">
     <div class="card heroLeft">
       <div class="pad">
-        <div class="productLogoBox">
-          <img src="smartseat-logo.png" alt="Smart Seat logo">
+        <div class="hubMark">
+          <img src="segberg-logo.png" alt="Segberg.ca logo">
+          <div class="hubMarkText">
+            <strong>Segberg.ca Tools</strong>
+            <span>
+              A small suite of classroom-ready web apps—built by an educator to solve real school routines.
+            </span>
+          </div>
         </div>
 
-        <h1>RFID attendance + seating, made simple.</h1>
+        <h1>Fast, practical tools for real classrooms.</h1>
         <p class="lead">
-          Smart Seat is a classroom web app for fast tap-in attendance, instant seat assignment,
-          and live in/out tracking — designed to be readable from anywhere in the room.
+          Launch Smart Seat for RFID attendance + seating, build report card comments in minutes,
+          and generate clean announcement scripts for your broadcast team.
         </p>
 
         <div class="ctaRow">
-          <a class="btn primary" href="https://script.google.com/macros/s/AKfycbzH1uq6IeE1QhfbbiVyNp1TyZuatCfz0uF5wjyK1Rvrv3ZxcK0FNbT4Uj-T3hZuxqXD/exec" target="_blank" rel="noopener">
-            Launch Smart Seat
-          </a>
-          <a class="btn ghost" href="#who">
-            Who it’s for
-          </a>
+          <a class="btn primary" href="#tools">Browse Tools</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
         </div>
 
         <div class="pillRow">
-          <span class="pill">RFID / NFC tap-in</span>
           <span class="pill">Big-screen friendly</span>
           <span class="pill">Google Sheets backend</span>
-          <span class="pill">Apps Script web app</span>
+          <span class="pill">Apps Script web apps</span>
+          <span class="pill">Built for daily use</span>
         </div>
 
         <div class="divider"></div>
 
         <p class="sectionSub" style="margin:0;">
-          Built by an educator using tools schools already trust — practical, fast, and classroom-ready.
+          Note: each tool opens in a new tab for the best compatibility (Option A).
         </p>
       </div>
     </div>
@@ -385,23 +460,126 @@
     <aside class="card">
       <div class="pad stack">
         <div class="miniCard">
-          <strong>RFID Attendance</strong>
-          <span>Students tap in quickly. Attendance is timestamped automatically.</span>
+          <strong>Smart Seat</strong>
+          <span>RFID attendance + seating + in/out tracking — designed to be readable from anywhere in the room.</span>
         </div>
         <div class="miniCard">
-          <strong>Seat Assignment</strong>
-          <span>Assign or randomize seats instantly — great for daily classes or exams.</span>
+          <strong>Report Card Comment Builder</strong>
+          <span>Dropdown-driven workflow that produces polished comments fast and consistently.</span>
         </div>
         <div class="miniCard">
-          <strong>In / Out Tracking</strong>
-          <span>Clear visibility of who has left, who returned, and classroom flow at a glance.</span>
+          <strong>SABTV Script Builder</strong>
+          <span>Build a daily announcement script with weather + announcements + fun fact logic.</span>
         </div>
         <div class="miniCard">
-          <strong>Designed for Clarity</strong>
-          <span>High-contrast layout and large UI elements for real classrooms.</span>
+          <strong>School-friendly stack</strong>
+          <span>Simple deployment, fast iteration, and data ownership via <code>Google Sheets</code>.</span>
         </div>
       </div>
     </aside>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools" class="section card">
+    <div class="pad">
+      <h2 class="sectionTitle">Tools</h2>
+      <p class="sectionSub">
+        A small toolkit of web apps. Each one is built to be quick, clear, and genuinely useful in a school day.
+      </p>
+
+      <div class="grid3">
+        <!-- Smart Seat -->
+        <div class="tool">
+          <div class="toolHead">
+            <div>
+              <strong>Smart Seat</strong>
+              <span>RFID attendance + seating assignment + in/out tracking.</span>
+            </div>
+            <div class="badge featured">Featured</div>
+          </div>
+
+          <div class="toolLogoBox" aria-hidden="true">
+            <img src="smartseat-logo.png" alt="Smart Seat logo">
+          </div>
+
+          <div class="toolActions">
+            <a class="btn primary"
+               href="https://script.google.com/macros/s/AKfycbzH1uq6IeE1QhfbbiVyNp1TyZuatCfz0uF5wjyK1Rvrv3ZxcK0FNbT4Uj-T3hZuxqXD/exec"
+               target="_blank" rel="noopener">
+              Launch
+            </a>
+            <a class="btn ghost" href="#smartseat">Details</a>
+          </div>
+        </div>
+
+        <!-- Script Builder -->
+        <div class="tool">
+          <div class="toolHead">
+            <div>
+              <strong>SABTV Script Builder</strong>
+              <span>Generate a daily announcements script with weather + announcements + fun fact.</span>
+            </div>
+            <div class="badge">New</div>
+          </div>
+
+          <div class="toolActions">
+            <a class="btn primary"
+               href="https://script.google.com/a/macros/eics.ab.ca/s/AKfycbyPoFTs9K3XYnPHnv4y65biHlQytCR-jfLa721R0irhNZHqWxnFZ3L3LGY7gZUisvxp/exec"
+               target="_blank" rel="noopener">
+              Launch
+            </a>
+            <a class="btn ghost" href="#how">How it works</a>
+          </div>
+        </div>
+
+        <!-- Report Card Builder -->
+        <div class="tool">
+          <div class="toolHead">
+            <div>
+              <strong>Report Card Comment Builder</strong>
+              <span>Build consistent, high-quality comments quickly with an organized workflow.</span>
+            </div>
+            <div class="badge">Popular</div>
+          </div>
+
+          <div class="toolActions">
+            <a class="btn primary"
+               href="https://script.google.com/macros/s/AKfycbwAj4nY__TUSTHp8-Uw5cf5GA8VUdoxVt02DEGF4CdMnFRK-S3_osAIEiL56yYaQ8Co/exec"
+               target="_blank" rel="noopener">
+              Launch
+            </a>
+            <a class="btn ghost" href="#contact">Request access</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SMART SEAT DETAILS (keeps your existing section, just slightly reframed) -->
+  <section id="smartseat" class="section card">
+    <div class="pad">
+      <h2 class="sectionTitle">Smart Seat</h2>
+      <p class="sectionSub">
+        Smart Seat is a classroom web app for fast tap-in attendance, instant seat assignment,
+        and live in/out tracking — designed to be readable from anywhere in the room.
+      </p>
+
+      <div class="ctaRow">
+        <a class="btn primary"
+           href="https://script.google.com/macros/s/AKfycbzH1uq6IeE1QhfbbiVyNp1TyZuatCfz0uF5wjyK1Rvrv3ZxcK0FNbT4Uj-T3hZuxqXD/exec"
+           target="_blank" rel="noopener">
+          Launch Smart Seat
+        </a>
+        <a class="btn ghost" href="#who">Who it’s for</a>
+      </div>
+
+      <div class="pillRow">
+        <span class="pill">RFID / NFC tap-in</span>
+        <span class="pill">Big-screen friendly</span>
+        <span class="pill">Google Sheets backend</span>
+        <span class="pill">Apps Script web app</span>
+      </div>
+    </div>
   </section>
 
   <!-- WHO -->
@@ -444,12 +622,12 @@
         </div>
         <div class="callout">
           <strong>Google Apps Script</strong>
-          <span>Web app delivery with controlled access and PIN protection.</span>
+          <span>Web app delivery with controlled access and PIN protection (inside each tool).</span>
         </div>
       </div>
 
       <p class="sectionSub" style="margin-top:14px;">
-        Smart Seat opens as a web app, while your data stays organized behind the scenes in <code>Google Sheets</code>.
+        Each tool opens as a web app, while your data stays organized behind the scenes in <code>Google Sheets</code>.
       </p>
     </div>
   </section>
@@ -465,16 +643,14 @@
         </p>
       </div>
       <div class="ctaRow" style="margin-top:0;">
-        <a class="btn primary" href="https://script.google.com/macros/s/AKfycbz5yGee1rhN7jQC1ALJQx3ch_84aHpKxvfyHZXNs4QP0aTNwRfvp288pACj4X5Iih79/exec" target="_blank" rel="noopener">
-          Launch Smart Seat
-        </a>
+        <a class="btn primary" href="#tools">Browse Tools</a>
       </div>
     </div>
   </section>
 
   <footer>
     <div>© <span id="year"></span> Segberg.ca</div>
-    <div>Hosted on GitHub Pages • Smart Seat runs on Google Apps Script</div>
+    <div>Hosted on GitHub Pages • Tools run on Google Apps Script</div>
   </footer>
 
 </div>
