@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SABTV Teleprompter</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --text:#eaf2ff;
+      --muted:#a8b3c7;
+      --accent:#ffd54a;
+      --danger:#ff4d4d;
+      --ok:#42d27a;
+
+      --shadow: 0 14px 44px rgba(0,0,0,.48);
+      --radius: 18px;
+
+      --fontSize: 64px;
+      --lineHeight: 1.35;
+
+      /* Prompter width control */
+      --paperMax: 1400px;
+
+      /* Script weight control */
+      --scriptWeight: 520; /* normal-ish */
+      --scriptTracking: .25px;
+
+      /* Reading guide line */
+      --guideY: 42%;
+      --guideThickness: 2px;
+      --guideGlow: 18px;
+
+      /* Branding (boosted visibility) */
+      --logoOpacity: 1;
+      --logoOverlaySize: 160px;
+      --logoWatermarkOpacity: .10;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(255,213,74,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(66,210,122,.10), transparent 60%),
+        radial-gradient(900px 700px at 55% 90%, rgba(120,140,255,.08), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      height:100vh;
+      overflow:hidden;
+    }
+
+    .app{
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:16px;
+      padding:16px;
+      height:100vh;
+    }
+
+    .left{
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+      overflow:auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 10px 12px;
+      border-radius: 14px;
+      background: rgba(18,26,35,.6);
+      border: 1px solid rgba(255,255,255,.07);
+    }
+
+    .brandLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    /* Proud logo plate in header */
+    .logoPlate{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 28px rgba(0,0,0,.35);
+      flex:0 0 auto;
+    }
+    .brandLogo{
+      height:38px;
+      width:auto;
+      display:block;
+      opacity: 1;
+      filter:
+        drop-shadow(0 10px 20px rgba(0,0,0,.55))
+        drop-shadow(0 0 12px rgba(255,255,255,.10));
+    }
+    .logoText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      padding-top:1px;
+    }
+    .logoText .name{
+      font-weight: 950;
+      letter-spacing: .5px;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .logoText .tag{
+      font-size: 11px;
+      color: rgba(255,255,255,.72);
+      letter-spacing: .2px;
+    }
+
+    .brandText{ min-width:0; }
+    .brand h1{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:.4px;
+      font-weight: 800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    /* Upgraded pill */
+    .pill{
+      font-size:12px;
+      color: #111;
+      background: linear-gradient(180deg, rgba(255,213,74,1), rgba(255,180,60,1));
+      padding:7px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      letter-spacing:.3px;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 12px 24px rgba(0,0,0,.25);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+
+    .section{
+      margin-top:12px;
+      background: rgba(18,26,35,.52);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 14px;
+      padding:12px;
+    }
+    .section h2{
+      margin:0 0 8px;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.45px;
+      font-weight:800;
+      text-transform:uppercase;
+    }
+
+    textarea{
+      width:100%;
+      min-height: 260px;
+      resize: vertical;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(15,22,32,.78);
+      color: var(--text);
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      outline:none;
+    }
+    textarea:focus{
+      border-color: rgba(255,213,74,.55);
+      box-shadow: 0 0 0 4px rgba(255,213,74,.14);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .control{
+      background: rgba(15,22,32,.56);
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: 12px;
+      padding:10px;
+    }
+    .control label{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom:6px;
+    }
+    input[type="range"]{ width:100%; }
+
+    .toggleRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.085);
+      background: rgba(15,22,32,.40);
+      margin-top:10px;
+    }
+    .toggleRow .label{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .toggleRow .label strong{
+      font-size:12px;
+      color: var(--text);
+      letter-spacing:.2px;
+    }
+    .toggleRow .label span{
+      font-size:11px;
+      color: var(--muted);
+    }
+    .switch{
+      position:relative;
+      width: 44px;
+      height: 26px;
+      flex:0 0 auto;
+    }
+    .switch input{ display:none; }
+    .slider{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.18);
+      transition: .15s ease;
+      cursor:pointer;
+    }
+    .slider:before{
+      content:"";
+      position:absolute;
+      width:20px;height:20px;
+      left:3px; top:50%;
+      transform: translateY(-50%);
+      border-radius:50%;
+      background: rgba(255,255,255,.92);
+      transition: .15s ease;
+    }
+    .switch input:checked + .slider{
+      background: rgba(255,213,74,.22);
+      border-color: rgba(255,213,74,.45);
+    }
+    .switch input:checked + .slider:before{
+      left:21px;
+      background: var(--accent);
+    }
+
+    .buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius: 12px;
+      padding:10px 12px;
+      font-weight:850;
+      color: #0b0f14;
+      background: rgba(255,255,255,.92);
+      transition: transform .05s ease, filter .12s ease;
+    }
+    button:hover{ filter: brightness(1.03); }
+    button:active{ transform: translateY(1px); }
+    button.primary{ background: var(--accent); }
+    button.ghost{
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      color: var(--text);
+    }
+    button.danger{ background: var(--danger); color:#fff; }
+    button.ok{ background: var(--ok); color:#062012; }
+
+    .hint{
+      margin-top:10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height:1.45;
+    }
+
+    .kbd{
+      display:inline-block;
+      padding:2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      margin:0 2px;
+      white-space:nowrap;
+    }
+
+    /* ---------- RIGHT / PROMPTER ---------- */
+
+    .right{
+      position:relative;
+      background: rgba(12,17,24,.55);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    /* Visual polish: subtle vignette + scanlines (very gentle) */
+    .right::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      pointer-events:none;
+      z-index:1;
+      background:
+        radial-gradient(1100px 800px at 50% 10%, rgba(255,255,255,.06), transparent 55%),
+        radial-gradient(900px 700px at 10% 85%, rgba(255,213,74,.06), transparent 60%),
+        radial-gradient(900px 700px at 90% 85%, rgba(66,210,122,.05), transparent 60%),
+        radial-gradient(closest-side at 50% 50%, transparent 55%, rgba(0,0,0,.55) 115%),
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.025) 0px, rgba(255,255,255,.025) 1px, rgba(0,0,0,0) 3px, rgba(0,0,0,0) 6px);
+      opacity:.55;
+      mix-blend-mode: soft-light;
+    }
+
+    .stage{
+      height:100%;
+      overflow:auto;
+      scrollbar-width: none;
+      outline: none;
+      position:relative;
+      z-index:2;
+    }
+    .stage::-webkit-scrollbar{ width: 0; height:0; }
+
+    .paper{
+      max-width: var(--paperMax);
+      width: min(var(--paperMax), 100%);
+      margin: 0 auto;
+      padding: 96px 80px 340px;
+      transform-origin: center;
+    }
+
+    /* Fullscreen goes wider */
+    .right:fullscreen .paper{
+      max-width: 1900px;
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+
+    .script{
+      font-size: var(--fontSize);
+      line-height: var(--lineHeight);
+      letter-spacing: var(--scriptTracking);
+      font-weight: var(--scriptWeight);
+      white-space: pre-wrap;
+      word-break: break-word;
+      text-shadow:
+        0 2px 10px rgba(0,0,0,.35),
+        0 0 28px rgba(0,0,0,.25);
+    }
+
+    .guides{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.16;
+      z-index:3;
+      background:
+        linear-gradient(to right,
+          transparent 0%,
+          transparent 6%,
+          rgba(255,255,255,.08) 6%,
+          transparent 6.2%,
+          transparent 93.8%,
+          rgba(255,255,255,.08) 94%,
+          transparent 94.2%,
+          transparent 100%);
+      mix-blend-mode: screen;
+    }
+
+    /* Reading guide line */
+    .readGuide{
+      position:absolute;
+      left:0;
+      right:0;
+      top: var(--guideY);
+      z-index:4;
+      pointer-events:none;
+      opacity:.95;
+    }
+    .readGuide .line{
+      height:0;
+      border-top: var(--guideThickness) solid rgba(255,213,74,.26);
+      box-shadow:
+        0 0 var(--guideGlow) rgba(255,213,74,.18),
+        0 0 2px rgba(255,255,255,.10);
+      margin:0 18px;
+      border-radius: 999px;
+    }
+    .readGuide .notch{
+      width:14px;
+      height:14px;
+      border-radius: 6px;
+      background: rgba(255,213,74,.12);
+      border: 1px solid rgba(255,213,74,.22);
+      box-shadow: 0 0 18px rgba(255,213,74,.14);
+      position:absolute;
+      left:50%;
+      top:-7px;
+      transform: translateX(-50%);
+    }
+    .readGuide.off{ display:none; }
+
+    /* Stage logo overlay (top-left) — PROUD */
+    .logoOverlay{
+      position:absolute;
+      top:18px;
+      left:18px;
+      width: var(--logoOverlaySize);
+      height:auto;
+      z-index:5;
+      pointer-events:none;
+      opacity: 1;
+      padding:10px 12px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 16px 34px rgba(0,0,0,.55),
+        0 0 18px rgba(255,255,255,.10);
+      filter:
+        drop-shadow(0 14px 24px rgba(0,0,0,.55))
+        drop-shadow(0 0 14px rgba(255,255,255,.10));
+    }
+    .logoOverlay.off{ display:none; }
+
+    /* Faint watermark behind script */
+    .watermark{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity: var(--logoWatermarkOpacity);
+      transform: rotate(-8deg);
+      filter: blur(.2px);
+    }
+    .watermark img{
+      width: min(68vw, 920px);
+      height:auto;
+    }
+    .watermark.off{ display:none; }
+
+    .statusbar{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(18,26,35,.62);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding:10px 12px;
+      backdrop-filter: blur(14px);
+      z-index:6;
+    }
+    .status{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap:wrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: rgba(255,255,255,.25);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+    }
+    .dot.running{ background: var(--ok); box-shadow: 0 0 0 3px rgba(66,210,122,.18); }
+    .dot.stopped{ background: rgba(255,255,255,.25); }
+    .meter{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--text);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      white-space:nowrap;
+    }
+
+    .blackout{
+      position:absolute;
+      inset:0;
+      background:#000;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .12s ease;
+      z-index:10;
+    }
+    .blackout.on{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .mirrored .paper{ transform: scaleX(-1); }
+    .mirrored .logoOverlay{ transform: scaleX(-1); left:auto; right:18px; }
+
+    .capture{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(15,22,32,.45);
+      font-size:12px;
+      color: var(--muted);
+    }
+    .capture strong{
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    /* Fullscreen layout */
+    body.fs .app{
+      grid-template-columns: 1fr;
+      padding: 0;
+      gap:0;
+    }
+    body.fs .left{ display:none; }
+    body.fs .right{
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      background: rgba(0,0,0,.40);
+    }
+    body.fs .statusbar{
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+    }
+
+    /* ✅ Clean screen mode while fullscreen */
+    body.fs.clean .statusbar,
+    body.fs.clean .guides{
+      opacity:0;
+      pointer-events:none;
+    }
+    body.fs.clean .right::before{
+      opacity:.30; /* keep some polish, reduce visual noise */
+    }
+
+    @media (max-width: 980px){
+      .app{ grid-template-columns: 1fr; }
+      .left{ height: 44vh; }
+      .right{ height: 54vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="left">
+      <div class="brand">
+        <div class="brandLeft">
+          <div class="logoPlate">
+            <img id="brandLogo" class="brandLogo" alt="SABTV logo" />
+            <div class="logoText">
+              <div class="name">SABTV</div>
+              <div class="tag">Student Broadcasting</div>
+            </div>
+          </div>
+
+          <div class="brandText">
+            <h1>SABTV Teleprompter</h1>
+            <div class="sub">Remote-ready • works offline • fullscreen hides controls</div>
+          </div>
+        </div>
+        <div class="pill">SABTV</div>
+      </div>
+
+      <div class="section">
+        <h2>Script</h2>
+        <textarea id="input" spellcheck="false">Good morning Cardinals!
+
+Here are today’s announcements:
+
+• First, a reminder that _________.
+• Next, congratulations to _________.
+• Finally, remember to _________.
+
+Have a great day, and St. André Bessette… pray for us.</textarea>
+
+        <div class="buttons">
+          <button class="primary" id="applyBtn">Apply to Prompter</button>
+          <button class="ghost" id="clearBtn">Clear</button>
+          <button class="ghost" id="fullscreenBtn">Fullscreen</button>
+        </div>
+
+        <div class="hint">
+          Studio tip: Click once inside the prompter (right side) so it “listens” to your remote.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Controls</h2>
+
+        <div class="row">
+          <div class="control">
+            <label><span>Pace</span><span id="paceLabel">140 wpm</span></label>
+            <!-- ✅ WPM slider replaces px/sec -->
+            <input id="wpm" type="range" min="80" max="220" value="140" />
+          </div>
+          <div class="control">
+            <label><span>Font Size</span><span id="fontLabel">64</span></label>
+            <input id="font" type="range" min="28" max="120" value="64" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="control">
+            <label><span>Line Height</span><span id="lhLabel">1.35</span></label>
+            <input id="lh" type="range" min="110" max="190" value="135" />
+          </div>
+          <div class="control">
+            <label><span>Top Padding</span><span id="padLabel">96</span></label>
+            <input id="pad" type="range" min="30" max="180" value="96" />
+          </div>
+        </div>
+
+        <div class="toggleRow">
+          <div class="label">
+            <strong>Thicker script font</strong>
+            <span>Improves readability from distance</span>
+          </div>
+          <label class="switch" title="Toggle thicker script font">
+            <input id="boldToggle" type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggleRow">
+          <div class="label">
+            <strong>Reading guide line</strong>
+            <span>Helps anchors hold eye-line</span>
+          </div>
+          <label class="switch" title="Toggle reading guide line">
+            <input id="guideToggle" type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggleRow">
+          <div class="label">
+            <strong>SABTV stage logo</strong>
+            <span>Branding overlay in the prompter</span>
+          </div>
+          <label class="switch" title="Toggle stage logo overlay">
+            <input id="logoToggle" type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggleRow">
+          <div class="label">
+            <strong>Logo watermark</strong>
+            <span>Faint background brand mark</span>
+          </div>
+          <label class="switch" title="Toggle logo watermark">
+            <input id="watermarkToggle" type="checkbox" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- ✅ Clean screen toggle (applies only in fullscreen) -->
+        <div class="toggleRow">
+          <div class="label">
+            <strong>Clean fullscreen</strong>
+            <span>Hides status + guides while fullscreen</span>
+          </div>
+          <label class="switch" title="Toggle clean fullscreen mode">
+            <input id="cleanToggle" type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="buttons">
+          <button class="ok" id="toggleBtn">Start</button>
+          <button class="ghost" id="mirrorBtn">Mirror (M)</button>
+          <button class="danger" id="blackoutBtn">Blackout (B)</button>
+          <button class="ghost" id="topBtn">Top (Home)</button>
+          <button class="ghost" id="bottomBtn">Bottom (End)</button>
+          <button class="ghost" id="resetBtn">Reset (R)</button>
+        </div>
+
+        <div class="hint">
+          Remote mapping (your buttons):<br/>
+          <span class="kbd">PgDn</span> Start/Stop • <span class="kbd">PgUp</span> Nudge Back<br/>
+          <span class="kbd">Esc</span> Stop • <span class="kbd">B</span> Blackout<br/>
+          Keyboard extras: <span class="kbd">↑/↓</span> pace • <span class="kbd">+/−</span> font • <span class="kbd">M</span> mirror
+          <br/>Quick toggles: <span class="kbd">T</span> bold • <span class="kbd">G</span> guide line • <span class="kbd">L</span> logo • <span class="kbd">C</span> clean FS
+        </div>
+
+        <div class="capture">
+          <div>Remote key detected:</div>
+          <strong id="keyReadout">—</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="right" id="rightPane">
+      <div class="guides" aria-hidden="true"></div>
+
+      <div class="readGuide" id="readGuide" aria-hidden="true">
+        <div class="line"></div>
+        <div class="notch"></div>
+      </div>
+
+      <img id="overlayLogo" class="logoOverlay" alt="SABTV" />
+
+      <div class="watermark off" id="watermark" aria-hidden="true">
+        <img id="watermarkLogo" alt="SABTV watermark" />
+      </div>
+
+      <div class="blackout" id="blackout"></div>
+
+      <div class="stage" id="stage" tabindex="0" aria-label="Teleprompter stage">
+        <div class="paper" id="paper">
+          <div class="script" id="script"></div>
+        </div>
+      </div>
+
+      <div class="statusbar" id="statusbar">
+        <div class="status">
+          <div class="dot stopped" id="dot"></div>
+          <div id="stateText">Stopped</div>
+          <div class="meter" id="meter">140 wpm • font 64 • lh 1.35</div>
+          <div class="meter" id="eta">ETA —</div>
+        </div>
+        <div class="status" style="justify-content:flex-end;">
+          <div class="meter" id="progress">0%</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+(() => {
+  const input = document.getElementById('input');
+  const script = document.getElementById('script');
+  const stage = document.getElementById('stage');
+  const paper = document.getElementById('paper');
+  const rightPane = document.getElementById('rightPane');
+
+  // Replaced speed slider with WPM
+  const wpm = document.getElementById('wpm');
+  const font = document.getElementById('font');
+  const lh = document.getElementById('lh');
+  const pad = document.getElementById('pad');
+
+  const paceLabel = document.getElementById('paceLabel');
+  const fontLabel = document.getElementById('fontLabel');
+  const lhLabel = document.getElementById('lhLabel');
+  const padLabel = document.getElementById('padLabel');
+
+  const applyBtn = document.getElementById('applyBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+  const toggleBtn = document.getElementById('toggleBtn');
+  const mirrorBtn = document.getElementById('mirrorBtn');
+  const blackoutBtn = document.getElementById('blackoutBtn');
+  const topBtn = document.getElementById('topBtn');
+  const bottomBtn = document.getElementById('bottomBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const blackout = document.getElementById('blackout');
+  const dot = document.getElementById('dot');
+  const stateText = document.getElementById('stateText');
+  const meter = document.getElementById('meter');
+  const progress = document.getElementById('progress');
+  const eta = document.getElementById('eta');
+  const keyReadout = document.getElementById('keyReadout');
+
+  const boldToggle = document.getElementById('boldToggle');
+  const guideToggle = document.getElementById('guideToggle');
+  const logoToggle = document.getElementById('logoToggle');
+  const watermarkToggle = document.getElementById('watermarkToggle');
+  const cleanToggle = document.getElementById('cleanToggle');
+
+  const readGuide = document.getElementById('readGuide');
+  const overlayLogo = document.getElementById('overlayLogo');
+  const brandLogo = document.getElementById('brandLogo');
+  const watermark = document.getElementById('watermark');
+  const watermarkLogo = document.getElementById('watermarkLogo');
+
+  // ✅ SABTV logo from Imgur (direct PNG link)
+  const LOGO_DATA = "https://i.imgur.com/QnrvLYL.png";
+
+  // ---- Remote behavior settings ----
+  const BACK_NUDGE_PX = 260;
+  const WPM_STEP      = 5;
+  const FONT_STEP     = 4;
+
+  // IMPORTANT: When you are typing in the script box, we do NOT hijack keys.
+  // (So M, B, Space, R, etc. type normally.)
+  // If you still want hotkeys while typing, use Ctrl/⌘ + key.
+  const REQUIRE_MODIFIER_WHILE_TYPING = true;
+  // -----------------------------------------------------
+
+  let running = false;
+  let mirrored = false;
+  let blackoutOn = false;
+  let rafId = null;
+  let lastTs = null;
+
+  function isTypingTarget(el){
+    if (!el) return false;
+    const tag = (el.tagName || "").toLowerCase();
+    if (tag === "textarea" || tag === "input" || tag === "select") return true;
+    if (el.isContentEditable) return true;
+    return false;
+  }
+
+  // Estimate pixels-per-second based on WPM and current font.
+  function computePxPerSec(){
+    const wpmVal = Number(wpm.value);
+    const text = (script.textContent || "").trim();
+    const words = Math.max(1, text.split(/\s+/).length);
+
+    const maxScroll = Math.max(1, stage.scrollHeight - stage.clientHeight);
+    const totalSeconds = (words / wpmVal) * 60;
+
+    const fudge = 0.95;
+    return (maxScroll / totalSeconds) * fudge;
+  }
+
+  function formatTime(sec){
+    if (!isFinite(sec) || sec <= 0) return "—";
+    const s = Math.round(sec);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return m > 0 ? `${m}:${String(r).padStart(2,'0')}` : `${r}s`;
+  }
+
+  function updateETA(){
+    const maxScroll = Math.max(1, stage.scrollHeight - stage.clientHeight);
+    const remaining = Math.max(0, maxScroll - stage.scrollTop);
+    const pps = computePxPerSec();
+    const secondsLeft = remaining / Math.max(1, pps);
+    eta.textContent = `ETA ${formatTime(secondsLeft)}`;
+  }
+
+  function applyLogoSrc() {
+    const ok = (src) => src && (src.startsWith("data:image") || src.startsWith("http"));
+    const src = ok(LOGO_DATA) ? LOGO_DATA : "";
+
+    if (!src) {
+      overlayLogo.classList.add('off');
+      brandLogo.style.display = "none";
+      watermark.classList.add('off');
+      return;
+    }
+    overlayLogo.src = src;
+    brandLogo.src = src;
+    watermarkLogo.src = src;
+    brandLogo.style.display = "block";
+  }
+
+  function applyBold(isOn) {
+    document.documentElement.style.setProperty('--scriptWeight', isOn ? '680' : '520');
+    document.documentElement.style.setProperty('--scriptTracking', isOn ? '.35px' : '.25px');
+    localStorage.setItem('SABTV_BOLD', isOn ? '1' : '0');
+  }
+
+  function applyGuide(isOn){
+    readGuide.classList.toggle('off', !isOn);
+    localStorage.setItem('SABTV_GUIDE', isOn ? '1' : '0');
+  }
+
+  function applyOverlayLogo(isOn){
+    overlayLogo.classList.toggle('off', !isOn);
+    localStorage.setItem('SABTV_LOGO_OVERLAY', isOn ? '1' : '0');
+  }
+
+  function applyWatermark(isOn){
+    watermark.classList.toggle('off', !isOn);
+    localStorage.setItem('SABTV_WATERMARK', isOn ? '1' : '0');
+  }
+
+  function applyCleanFullscreen(isOn){
+    document.body.classList.toggle('clean', !!isOn);
+    localStorage.setItem('SABTV_CLEAN_FS', isOn ? '1' : '0');
+  }
+
+  function applyVisuals() {
+    const w = Number(wpm.value);
+    const f = Number(font.value);
+    const lhn = (Number(lh.value) / 100).toFixed(2);
+    const pd = Number(pad.value);
+
+    document.documentElement.style.setProperty('--fontSize', `${f}px`);
+    document.documentElement.style.setProperty('--lineHeight', lhn);
+    paper.style.paddingTop = `${pd}px`;
+
+    paceLabel.textContent = `${w} wpm`;
+    fontLabel.textContent = f;
+    lhLabel.textContent = lhn;
+    padLabel.textContent = pd;
+
+    meter.textContent =
+      `${w} wpm • font ${f} • lh ${lhn}` +
+      (boldToggle.checked ? ' • bold' : '') +
+      (guideToggle.checked ? ' • guide' : '') +
+      (logoToggle.checked ? ' • logo' : '') +
+      (document.fullscreenElement && cleanToggle.checked ? ' • clean' : '');
+
+    updateETA();
+  }
+
+  function applyText() {
+    script.textContent = input.value || "";
+    requestAnimationFrame(() => {
+      updateProgress();
+      updateETA();
+    });
+  }
+
+  function setRunning(on) {
+    running = on;
+    toggleBtn.textContent = running ? "Stop" : "Start";
+    stateText.textContent = running ? "Running" : "Stopped";
+    dot.classList.toggle('running', running);
+    dot.classList.toggle('stopped', !running);
+
+    if (running) { lastTs = null; loop(performance.now()); }
+    else { if (rafId) cancelAnimationFrame(rafId); rafId = null; lastTs = null; }
+  }
+
+  function loop(ts) {
+    if (!running) return;
+    if (lastTs == null) lastTs = ts;
+    const dt = Math.min(50, ts - lastTs);
+    lastTs = ts;
+
+    const dy = (computePxPerSec() * dt) / 1000;
+    stage.scrollTop += dy;
+
+    updateProgress();
+    updateETA();
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function updateProgress() {
+    const max = stage.scrollHeight - stage.clientHeight;
+    const pct = max <= 0 ? 0 : Math.round((stage.scrollTop / max) * 100);
+    progress.textContent = `${pct}%`;
+  }
+
+  function toggleMirror() {
+    mirrored = !mirrored;
+    rightPane.classList.toggle('mirrored', mirrored);
+  }
+
+  function toggleBlackout(force) {
+    blackoutOn = (typeof force === "boolean") ? force : !blackoutOn;
+    blackout.classList.toggle('on', blackoutOn);
+  }
+
+  function goTop() { stage.scrollTop = 0; updateProgress(); updateETA(); }
+  function goBottom(){ stage.scrollTop = stage.scrollHeight; updateProgress(); updateETA(); }
+
+  function resetAll() { setRunning(false); toggleBlackout(false); goTop(); }
+
+  function nudgeWpm(delta) {
+    const next = Math.max(Number(wpm.min), Math.min(Number(wpm.max), Number(wpm.value) + delta));
+    wpm.value = String(next);
+    applyVisuals();
+  }
+
+  function nudgeFont(delta) {
+    const next = Math.max(Number(font.min), Math.min(Number(font.max), Number(font.value) + delta));
+    font.value = String(next);
+    applyVisuals();
+  }
+
+  function nudgeBack(px = BACK_NUDGE_PX) {
+    stage.scrollTop = Math.max(0, stage.scrollTop - px);
+    updateProgress();
+    updateETA();
+  }
+
+  async function toggleFullscreen() {
+    try {
+      if (!document.fullscreenElement) {
+        await rightPane.requestFullscreen();
+        document.body.classList.add('fs');
+        applyCleanFullscreen(cleanToggle.checked);
+      } else {
+        await document.exitFullscreen();
+        document.body.classList.remove('fs');
+        document.body.classList.remove('clean');
+      }
+    } catch (e) {}
+    stage.focus();
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    const on = !!document.fullscreenElement;
+    document.body.classList.toggle('fs', on);
+    if (on) applyCleanFullscreen(cleanToggle.checked);
+    else document.body.classList.remove('clean');
+    stage.focus();
+    requestAnimationFrame(() => { applyVisuals(); updateProgress(); updateETA(); });
+  });
+
+  // UI wiring
+  applyBtn.addEventListener('click', () => { applyText(); stage.focus(); });
+  clearBtn.addEventListener('click', () => { input.value = ""; applyText(); stage.focus(); });
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+  toggleBtn.addEventListener('click', () => { setRunning(!running); stage.focus(); });
+  mirrorBtn.addEventListener('click', () => { toggleMirror(); stage.focus(); });
+  blackoutBtn.addEventListener('click', () => { toggleBlackout(); stage.focus(); });
+  topBtn.addEventListener('click', () => { goTop(); stage.focus(); });
+  bottomBtn.addEventListener('click', () => { goBottom(); stage.focus(); });
+  resetBtn.addEventListener('click', () => { resetAll(); stage.focus(); });
+
+  [wpm, font, lh, pad].forEach(el => el.addEventListener('input', () => {
+    applyVisuals();
+    updateProgress();
+    updateETA();
+  }));
+
+  boldToggle.addEventListener('change', () => {
+    applyBold(boldToggle.checked);
+    applyVisuals();
+    stage.focus();
+  });
+
+  guideToggle.addEventListener('change', () => {
+    applyGuide(guideToggle.checked);
+    applyVisuals();
+    stage.focus();
+  });
+
+  logoToggle.addEventListener('change', () => {
+    applyOverlayLogo(logoToggle.checked);
+    applyVisuals();
+    stage.focus();
+  });
+
+  watermarkToggle.addEventListener('change', () => {
+    applyWatermark(watermarkToggle.checked);
+    stage.focus();
+  });
+
+  cleanToggle.addEventListener('change', () => {
+    if (document.fullscreenElement) applyCleanFullscreen(cleanToggle.checked);
+    localStorage.setItem('SABTV_CLEAN_FS', cleanToggle.checked ? '1' : '0');
+    applyVisuals();
+    stage.focus();
+  });
+
+  stage.addEventListener('scroll', () => { updateProgress(); updateETA(); });
+
+  // KEYBOARD / REMOTE CONTROLS
+  window.addEventListener('keydown', (e) => {
+    keyReadout.textContent = `${e.code}  (${e.key})`;
+
+    const typingNow = isTypingTarget(e.target) || isTypingTarget(document.activeElement);
+
+    // If you're typing in the Script textarea (or any form field), do NOT steal keys.
+    // This fixes: M, B, Space, R typing normally.
+    // (Optional: still allow hotkeys while typing ONLY if Ctrl/⌘/Alt is held.)
+    if (typingNow) {
+      const wantsHotkeys = REQUIRE_MODIFIER_WHILE_TYPING && (e.ctrlKey || e.metaKey || e.altKey);
+      if (!wantsHotkeys) return;
+      // If they ARE holding a modifier, continue so hotkeys can work.
+    }
+
+    const prevent = ["Space","PageUp","PageDown","ArrowUp","ArrowDown","Home","End"];
+    if (prevent.includes(e.code)) e.preventDefault();
+
+    // Note: Escape is special in fullscreen (browser handles it), we only stop running.
+    if (e.code === "Escape") { setRunning(false); return; }
+
+    if (String(e.key).toLowerCase() === "b") { toggleBlackout(); return; }
+
+    if (e.code === "PageDown" || e.code === "Space") { setRunning(!running); return; }
+    if (e.code === "PageUp") { nudgeBack(); return; }
+
+    if (e.code === "ArrowDown") { nudgeWpm(+WPM_STEP); return; }
+    if (e.code === "ArrowUp")   { nudgeWpm(-WPM_STEP); return; }
+
+    if (e.key === "+" || e.key === "=") { nudgeFont(+FONT_STEP); return; }
+    if (e.key === "-" || e.key === "_") { nudgeFont(-FONT_STEP); return; }
+
+    if (String(e.key).toLowerCase() === "m") { toggleMirror(); return; }
+    if (e.code === "Home") { goTop(); return; }
+    if (e.code === "End")  { goBottom(); return; }
+    if (String(e.key).toLowerCase() === "r") { resetAll(); return; }
+
+    if (String(e.key).toLowerCase() === "t") {
+      boldToggle.checked = !boldToggle.checked;
+      applyBold(boldToggle.checked);
+      applyVisuals();
+      return;
+    }
+    if (String(e.key).toLowerCase() === "g") {
+      guideToggle.checked = !guideToggle.checked;
+      applyGuide(guideToggle.checked);
+      applyVisuals();
+      return;
+    }
+    if (String(e.key).toLowerCase() === "l") {
+      logoToggle.checked = !logoToggle.checked;
+      applyOverlayLogo(logoToggle.checked);
+      applyVisuals();
+      return;
+    }
+    if (String(e.key).toLowerCase() === "c") {
+      cleanToggle.checked = !cleanToggle.checked;
+      if (document.fullscreenElement) applyCleanFullscreen(cleanToggle.checked);
+      applyVisuals();
+      return;
+    }
+  }, { passive:false });
+
+  // init
+  applyText();
+
+  // restore prefs
+  boldToggle.checked = (localStorage.getItem('SABTV_BOLD') === '1');
+  guideToggle.checked = (localStorage.getItem('SABTV_GUIDE') !== '0'); // default ON
+  logoToggle.checked = (localStorage.getItem('SABTV_LOGO_OVERLAY') !== '0'); // default ON
+  watermarkToggle.checked = (localStorage.getItem('SABTV_WATERMARK') === '1');
+  cleanToggle.checked = (localStorage.getItem('SABTV_CLEAN_FS') !== '0'); // default ON
+  wpm.value = (localStorage.getItem('SABTV_WPM') || "140");
+
+  // persist WPM
+  wpm.addEventListener('change', () => localStorage.setItem('SABTV_WPM', String(wpm.value)));
+
+  applyBold(boldToggle.checked);
+  applyGuide(guideToggle.checked);
+  applyOverlayLogo(logoToggle.checked);
+  applyWatermark(watermarkToggle.checked);
+  applyLogoSrc();
+
+  applyVisuals();
+  updateProgress();
+  updateETA();
+  stage.focus();
+})();
+</script>
+</body>
+</html>
