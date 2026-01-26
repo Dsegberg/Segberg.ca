@@ -346,14 +346,17 @@
       object-fit: contain;
     }
 
-    /* ✅ Make ProPrompter logo larger only */
-    #prompter .toolLogoBox img{
-      max-height: 190px; /* larger ProPrompter mark */
-      max-width: 95%;
-    }
-    /* Optional breathing room for the larger mark */
+    /* ✅ ProPrompter: keep pill THIN, keep logo BIG */
     #prompter .toolLogoBox{
-      height: 190px;
+      height: 110px;          /* same thin pill as others */
+      padding: 14px;          /* slightly tighter */
+      overflow: visible;      /* allow logo to exceed pill */
+      margin-bottom: 60px;    /* reserve space for the oversized logo */
+    }
+    #prompter .toolLogoBox img{
+      max-height: 190px;      /* BIG logo */
+      max-width: 95%;
+      transform: translateY(35px); /* push logo down so it “hangs” out of the pill */
     }
 
     /* Tool badges (match logo cards) */
@@ -603,7 +606,6 @@
           </div>
 
           <div class="toolActions">
-            <!-- ✅ Relative link prevents 404 in different Pages setups -->
             <a class="btn primary" href="prompter/" target="_blank" rel="noopener">Launch</a>
             <a class="btn ghost" href="prompter/" target="_blank" rel="noopener">Open</a>
           </div>
