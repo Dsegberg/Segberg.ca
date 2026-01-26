@@ -339,11 +339,21 @@
       height: 110px; /* balanced visual weight */
     }
     .toolLogoBox img{
-      max-height: 90px;   /* bigger */
+      max-height: 90px;   /* base size for all tools */
       max-width: 95%;
       height:auto;
       width:auto;
       object-fit: contain;
+    }
+
+    /* ✅ Make ProPrompter logo larger only */
+    #prompter .toolLogoBox img{
+      max-height: 130px; /* larger ProPrompter mark */
+      max-width: 95%;
+    }
+    /* Optional breathing room for the larger mark */
+    #prompter .toolLogoBox{
+      height: 140px;
     }
 
     /* Tool badges (match logo cards) */
@@ -589,14 +599,13 @@
           </div>
 
           <div class="toolLogoBox">
-            <!-- Use segberg-logo.png until you add a dedicated ProPrompter logo -->
             <img src="proprompter-logo.png" alt="ProPrompter logo">
-            <!-- Or: <img src="proprompter-logo.png" alt="ProPrompter logo"> -->
           </div>
 
           <div class="toolActions">
-            <a class="btn primary" href="/prompter/" target="_blank" rel="noopener">Launch</a>
-            <a class="btn ghost" href="/prompter/" target="_blank" rel="noopener">Open</a>
+            <!-- ✅ Relative link prevents 404 in different Pages setups -->
+            <a class="btn primary" href="prompter/" target="_blank" rel="noopener">Launch</a>
+            <a class="btn ghost" href="prompter/" target="_blank" rel="noopener">Open</a>
           </div>
         </div>
 
