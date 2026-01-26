@@ -346,18 +346,27 @@
       object-fit: contain;
     }
 
-    /* ✅ ProPrompter: keep pill THIN, keep logo BIG */
-    #prompter .toolLogoBox{
-      height: 110px;          /* same thin pill as others */
-      padding: 14px;          /* slightly tighter */
-      overflow: visible;      /* allow logo to exceed pill */
-      margin-bottom: 45px;    /* reserve space for the oversized logo */
-    }
-    #prompter .toolLogoBox img{
-      max-height: 190px;      /* BIG logo */
-      max-width: 95%;
-      transform: translateY(35px); /* push logo down so it “hangs” out of the pill */
-    }
+    /* ✅ ProPrompter: keep pill THIN, keep logo BIG (no overflow square) */
+#prompter .toolLogoBox{
+  height: 110px;        /* same as others */
+  padding: 10px;        /* less padding = more room for logo */
+  overflow: hidden;     /* IMPORTANT: hides the PNG canvas overflow */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#prompter .toolLogoBox img{
+  max-height: 120px;    /* slightly bigger than normal */
+  max-width: 95%;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+
+  /* make it feel larger without overflow */
+  transform: scale(1.15);
+  transform-origin: center center;
+}
 
     /* Tool badges (match logo cards) */
     .badge{
