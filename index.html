@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Segberg.ca | Educator-built tools</title>
 
-  <meta name="description" content="Segberg.ca is an educator-built hub of practical classroom tools: Smart Seat (RFID attendance + seating), a report card comment builder, a script builder for announcements, and ProPrompter (a broadcast-ready teleprompter)." />
+  <meta name="description" content="Segberg.ca is an educator-built hub of practical classroom tools: Smart Seat (RFID attendance + seating), a report card comment builder, a script builder for announcements, ProPrompter, and Random Student Spotlight." />
   <meta name="theme-color" content="#0b5d7a" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -74,7 +74,7 @@
       min-width: 220px;
     }
     .brand img{
-      height:58px; /* prominent header mark */
+      height:58px;
       width:auto;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -114,7 +114,6 @@
       border-color: rgba(148,163,184,.12);
     }
 
-    /* General cards */
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border: 1px solid var(--border);
@@ -188,7 +187,6 @@
       margin: 14px 0;
     }
 
-    /* Hero (Segberg hub first) */
     .hero{
       margin-top: 22px;
       display:grid;
@@ -222,7 +220,7 @@
       border: 1px solid rgba(148,163,184,.14);
     }
     .hubMark img{
-      height:86px; /* BIG hub logo */
+      height:86px;
       width:auto;
       display:block;
       filter: drop-shadow(0 14px 30px rgba(0,0,0,.40));
@@ -243,7 +241,6 @@
       max-width: 42ch;
     }
 
-    /* Right column list */
     .stack{ display:grid; gap:12px; }
     .miniCard{
       background: rgba(255,255,255,.04);
@@ -264,7 +261,6 @@
       line-height:1.5;
     }
 
-    /* Sections */
     .section{ margin-top: 16px; }
     .sectionTitle{
       font-family: Oswald, Poppins, sans-serif;
@@ -286,7 +282,6 @@
     }
     @media (max-width: 980px){ .grid3{ grid-template-columns:1fr; } }
 
-    /* Tool cards */
     .tool{
       border-radius: 18px;
       padding:16px;
@@ -323,62 +318,53 @@
     }
     .toolActions a{ flex: 1 1 auto; text-align:center; }
 
-    /* Tool logos – prominent & balanced */
     .toolLogoBox{
       margin-top:6px;
-      background:#ffffff; /* match badge */
+      background:#ffffff;
       border-radius: 16px;
       padding:18px;
       border: 1px solid rgba(15,23,42,.12);
       box-shadow: 0 12px 28px rgba(0,0,0,.22);
-
       display:flex;
       align-items:center;
       justify-content:center;
-
-      height: 110px; /* balanced visual weight */
+      height: 110px;
     }
     .toolLogoBox img{
-      max-height: 90px;   /* base size for all tools */
+      max-height: 90px;
       max-width: 95%;
       height:auto;
       width:auto;
       object-fit: contain;
     }
 
-    /* ✅ ProPrompter: keep pill THIN, keep logo BIG (no overflow square) */
-#prompter .toolLogoBox{
-  height: 110px;        /* same as others */
-  padding: 10px;        /* less padding = more room for logo */
-  overflow: hidden;     /* IMPORTANT: hides the PNG canvas overflow */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+    #prompter .toolLogoBox{
+      height: 110px;
+      padding: 10px;
+      overflow: hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-#prompter .toolLogoBox img{
-  max-height: 150px;    /* slightly bigger than normal */
-  max-width: 95%;
-  height: auto;
-  width: auto;
-  object-fit: contain;
+    #prompter .toolLogoBox img{
+      max-height: 150px;
+      max-width: 95%;
+      height: auto;
+      width: auto;
+      object-fit: contain;
+      transform: scale(1.25);
+      transform-origin: center center;
+    }
 
-  /* make it feel larger without overflow */
-  transform: scale(1.25);
-  transform-origin: center center;
-}
-
-    /* Tool badges (match logo cards) */
     .badge{
       font-size:11px;
       font-weight:600;
       padding:6px 12px;
       border-radius:999px;
-
-      background:#ffffff; /* match logo card */
-      color:#0b5d7a;      /* brand blue */
+      background:#ffffff;
+      color:#0b5d7a;
       border: 1px solid rgba(15,23,42,.18);
-
       white-space:nowrap;
       box-shadow: 0 4px 10px rgba(0,0,0,.15);
     }
@@ -395,7 +381,6 @@
     .callout strong{ display:block; font-size:14px; margin-bottom:5px; }
     .callout span{ display:block; color:var(--muted); font-size:13px; line-height:1.5; }
 
-    /* Contact */
     .contactRow{
       display:flex;
       align-items:flex-start;
@@ -443,6 +428,7 @@
     <nav>
       <a href="#tools">Tools</a>
       <a href="#smartseat">Smart Seat</a>
+      <a href="#studentspotlight">Student Spotlight</a>
       <a href="#who">Who it’s for</a>
       <a href="#how">How it works</a>
       <a href="#contact">Contact</a>
@@ -470,7 +456,7 @@
         <h1>Fast, practical tools for real classrooms.</h1>
         <p class="lead">
           Launch Smart Seat for RFID attendance + seating, build report card comments in minutes,
-          and generate clean announcement scripts for your broadcast team.
+          generate clean announcement scripts for your broadcast team, and bring fair participation to class with Student Spotlight.
         </p>
 
         <div class="ctaRow">
@@ -506,6 +492,10 @@
         <div class="miniCard">
           <strong>SABTV Script Builder</strong>
           <span>Build a daily announcement script with weather + announcements + fun fact logic.</span>
+        </div>
+        <div class="miniCard">
+          <strong>Random Student Spotlight</strong>
+          <span>Fair, visible, and engaging student selection with roster importing, equity mode, and hot seat features.</span>
         </div>
         <div class="miniCard">
           <strong>ProPrompter</strong>
@@ -600,6 +590,32 @@
           </div>
         </div>
 
+        <!-- Random Student Spotlight -->
+        <div class="tool">
+          <div class="toolHead">
+            <div>
+              <strong>Random Student Spotlight</strong>
+              <span>Fair and fun classroom participation picker with roster importing, equity mode, and hot seat features.</span>
+            </div>
+            <div class="badge new">New</div>
+          </div>
+
+          <div class="toolLogoBox">
+            <strong style="color:#0b5d7a; font-family: Oswald, sans-serif; font-size: 22px;">
+              Student Spotlight
+            </strong>
+          </div>
+
+          <div class="toolActions">
+            <a class="btn primary"
+               href="https://studentselector.lovable.app"
+               target="_blank" rel="noopener">
+              Launch
+            </a>
+            <a class="btn ghost" href="#studentspotlight">Details</a>
+          </div>
+        </div>
+
         <!-- ProPrompter -->
         <div class="tool" id="prompter">
           <div class="toolHead">
@@ -619,7 +635,6 @@
             <a class="btn ghost" href="prompter/" target="_blank" rel="noopener">Open</a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -647,6 +662,35 @@
         <span class="pill">Big-screen friendly</span>
         <span class="pill">Google Sheets backend</span>
         <span class="pill">Apps Script web app</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RANDOM STUDENT SPOTLIGHT -->
+  <section id="studentspotlight" class="section card">
+    <div class="pad">
+      <h2 class="sectionTitle">Random Student Spotlight</h2>
+      <p class="sectionSub">
+        Random Student Spotlight is a classroom participation tool designed to make student selection fair,
+        engaging, and visible. Import class rosters, track participation, and use built-in modes like
+        Equity Mode and Hot Seat to keep students involved and accountable.
+      </p>
+
+      <div class="ctaRow">
+        <a class="btn primary"
+           href="https://studentselector.lovable.app"
+           target="_blank" rel="noopener">
+          Launch Random Student Spotlight
+        </a>
+        <a class="btn ghost" href="#tools">Back to Tools</a>
+      </div>
+
+      <div class="pillRow">
+        <span class="pill">Class roster import</span>
+        <span class="pill">Equity mode</span>
+        <span class="pill">Hot seat mode</span>
+        <span class="pill">Participation tracking</span>
+        <span class="pill">Classroom-friendly display</span>
       </div>
     </div>
   </section>
